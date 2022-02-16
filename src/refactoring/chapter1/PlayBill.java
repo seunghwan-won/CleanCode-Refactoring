@@ -26,7 +26,6 @@ public class PlayBill {
         Format format = format();
 
         for (Performance performance : invoice.getPerformance()) {
-            int thisAmount = amountFor(performance);
 
             // 포인트를 적립한다
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
@@ -35,8 +34,8 @@ public class PlayBill {
             }
 
             // 청구 내역을 출력한다
-            result += playFor(performance).getName() + ": " + format.format(thisAmount / 100) + "(" + performance.getAudience() + "석)\n";
-            totalAmount += thisAmount;
+            result += playFor(performance).getName() + ": " + format.format(amountFor(performance) / 100) + "(" + performance.getAudience() + "석)\n";
+            totalAmount += amountFor(performance);
         }
         result += "총액: " + format.format(totalAmount / 100) + "\n";
         result += "적립포인트: " + volumeCredits + "점\n";
