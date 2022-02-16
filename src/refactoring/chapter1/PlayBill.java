@@ -7,14 +7,14 @@ import java.util.Locale;
 import java.util.Map;
 
 public class PlayBill {
-
-    public static void main(String[] args) {
-        Invoice invoice = new Invoice("BigCo");
-        Map<String, Play> plays = new HashMap<>() {{
+        private static Invoice invoice = new Invoice("BigCo");
+        private static Map<String, Play> plays = new HashMap<>() {{
             put("hamlet", new Play("Hamlet", "tragedy"));
             put("as-like", new Play("As You Like It", "comedy"));
             put("othello", new Play("Othello", "tragedy"));
         }};
+
+    public static void main(String[] args) {
         String text = statement(invoice, plays);
         System.out.println(text);
     }
@@ -26,22 +26,25 @@ public class PlayBill {
         Format format = format();
 
         for (Performance performance : invoice.getPerformance()) {
-            Play play = plays.get(performance.getPlayID());
-            int thisAmount = amountFor(performance, play);
+            int thisAmount = amountFor(performance, playFor(performance));
 
             // 포인트를 적립한다
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
-            if ("comedy".equals(play.getType())) {
+            if ("comedy".equals(playFor(performance).getType())) {
                 volumeCredits += Math.floor(performance.getAudience() / 5);
             }
 
             // 청구 내역을 출력한다
-            result += play.getName() + ": " + format.format(thisAmount / 100) + "(" + performance.getAudience() + "석)\n";
+            result += playFor(performance).getName() + ": " + format.format(thisAmount / 100) + "(" + performance.getAudience() + "석)\n";
             totalAmount += thisAmount;
         }
         result += "총액: " + format.format(totalAmount / 100) + "\n";
         result += "적립포인트: " + volumeCredits + "점\n";
         return result;
+    }
+
+    private static Play playFor(Performance performance) {
+        return plays.get(performance.getPlayID());
     }
 
     private static int amountFor(Performance performance, Play play) {
