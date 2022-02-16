@@ -1,3 +1,5 @@
+package cleancode.chapter1;
+
 public class Complex {
     private final double value;
 
