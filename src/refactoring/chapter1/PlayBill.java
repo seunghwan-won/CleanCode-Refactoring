@@ -10,7 +10,7 @@ public class PlayBill {
 
     public static void main(String[] args) {
         Invoice invoice = new Invoice("BigCo");
-        Map<String, Play> plays = new HashMap<>(){{
+        Map<String, Play> plays = new HashMap<>() {{
             put("hamlet", new Play("Hamlet", "tragedy"));
             put("as-like", new Play("As You Like It", "comedy"));
             put("othello", new Play("Othello", "tragedy"));
@@ -27,25 +27,7 @@ public class PlayBill {
 
         for (Performance performance : invoice.getPerformance()) {
             Play play = plays.get(performance.getPlayID());
-            int thisAmount = 0;
-
-            switch (play.getType()) {
-                case "tragedy":
-                    thisAmount = 40000;
-                    if (performance.getAudience() > 30) {
-                        thisAmount += 1000 * (performance.getAudience() - 30);
-                    }
-                    break;
-                case "comedy":
-                    thisAmount = 30000;
-                    if (performance.getAudience() > 20) {
-                        thisAmount += 10000 + 500 * (performance.getAudience() - 20);
-                    }
-                    thisAmount += 300 * performance.getAudience();
-                    break;
-                default:
-                    throw new RuntimeException("알 수 없는 장르 : " + play.getType());
-            }
+            int thisAmount = amountFor(performance, play);
 
             // 포인트를 적립한다
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
@@ -60,6 +42,28 @@ public class PlayBill {
         result += "총액: " + format.format(totalAmount / 100) + "\n";
         result += "적립포인트: " + volumeCredits + "점\n";
         return result;
+    }
+
+    private static int amountFor(Performance performance, Play play) {
+        int thisAmount = 0;
+        switch (play.getType()) {
+            case "tragedy":
+                thisAmount = 40000;
+                if (performance.getAudience() > 30) {
+                    thisAmount += 1000 * (performance.getAudience() - 30);
+                }
+                break;
+            case "comedy":
+                thisAmount = 30000;
+                if (performance.getAudience() > 20) {
+                    thisAmount += 10000 + 500 * (performance.getAudience() - 20);
+                }
+                thisAmount += 300 * performance.getAudience();
+                break;
+            default:
+                throw new RuntimeException("알 수 없는 장르 : " + play.getType());
+        }
+        return thisAmount;
     }
 
     private static Format format() {
