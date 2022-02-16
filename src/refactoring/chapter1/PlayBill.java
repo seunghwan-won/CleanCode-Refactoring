@@ -26,7 +26,7 @@ public class PlayBill {
         Format format = format();
 
         for (Performance performance : invoice.getPerformance()) {
-            int thisAmount = amountFor(performance, playFor(performance));
+            int thisAmount = amountFor(performance);
 
             // 포인트를 적립한다
             volumeCredits += Math.max(performance.getAudience() - 30, 0);
@@ -47,9 +47,9 @@ public class PlayBill {
         return plays.get(performance.getPlayID());
     }
 
-    private static int amountFor(Performance performance, Play play) {
+    private static int amountFor(Performance performance) {
         int result = 0;
-        switch (play.getType()) {
+        switch (playFor(performance).getType()) {
             case "tragedy":
                 result = 40000;
                 if (performance.getAudience() > 30) {
@@ -64,7 +64,7 @@ public class PlayBill {
                 result += 300 * performance.getAudience();
                 break;
             default:
-                throw new RuntimeException("알 수 없는 장르 : " + play.getType());
+                throw new RuntimeException("알 수 없는 장르 : " + playFor(performance).getType());
         }
         return result;
     }
