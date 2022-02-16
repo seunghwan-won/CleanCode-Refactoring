@@ -45,25 +45,25 @@ public class PlayBill {
     }
 
     private static int amountFor(Performance performance, Play play) {
-        int thisAmount = 0;
+        int result = 0;
         switch (play.getType()) {
             case "tragedy":
-                thisAmount = 40000;
+                result = 40000;
                 if (performance.getAudience() > 30) {
-                    thisAmount += 1000 * (performance.getAudience() - 30);
+                    result += 1000 * (performance.getAudience() - 30);
                 }
                 break;
             case "comedy":
-                thisAmount = 30000;
+                result = 30000;
                 if (performance.getAudience() > 20) {
-                    thisAmount += 10000 + 500 * (performance.getAudience() - 20);
+                    result += 10000 + 500 * (performance.getAudience() - 20);
                 }
-                thisAmount += 300 * performance.getAudience();
+                result += 300 * performance.getAudience();
                 break;
             default:
                 throw new RuntimeException("알 수 없는 장르 : " + play.getType());
         }
-        return thisAmount;
+        return result;
     }
 
     private static Format format() {
