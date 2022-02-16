@@ -29,10 +29,10 @@ public class PlayBill {
             volumeCredits += volumeCreditsFor(performance);
 
             // 청구 내역을 출력한다
-            result += playFor(performance).getName() + ": " + format(amountFor(performance) / 100) + "(" + performance.getAudience() + "석)\n";
+            result += playFor(performance).getName() + ": " + usd(amountFor(performance) / 100) + "(" + performance.getAudience() + "석)\n";
             totalAmount += amountFor(performance);
         }
-        result += "총액: " + format(totalAmount / 100) + "\n";
+        result += "총액: " + usd(totalAmount / 100) + "\n";
         result += "적립포인트: " + volumeCredits + "점\n";
         return result;
     }
@@ -72,7 +72,7 @@ public class PlayBill {
         return result;
     }
 
-    private static String format(float number) {
+    private static String usd(float number) {
         Locale locale = Locale.US;
         return NumberFormat.getCurrencyInstance(locale).format(number);
     }
