@@ -19,19 +19,25 @@ public class PlayBill {
     }
 
     public static String statement(Invoice invoice, Map<String, Play> plays) {
-        int totalAmount = 0;
-
         String result = "청구내역 (고객명: " + invoice.getCustomer() + ")\n";
 
         for (Performance performance : invoice.getPerformance()) {
             // 청구 내역을 출력한다
             result += playFor(performance).getName() + ": " + usd(amountFor(performance)) + "(" + performance.getAudience() + "석)\n";
-            totalAmount += amountFor(performance);
         }
 
-        result += "총액: " + usd(totalAmount) + "\n";
+        result += "총액: " + usd(totalAmount()) + "\n";
         result += "적립포인트: " + totalVolumeCredits() + "점\n";
         return result;
+    }
+
+    private static int totalAmount() {
+        int totalAmount = 0;
+        for (Performance performance : invoice.getPerformance()) {
+            // 청구 내역을 출력한다
+            totalAmount += amountFor(performance);
+        }
+        return totalAmount;
     }
 
     private static int totalVolumeCredits() {
