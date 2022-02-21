@@ -34,7 +34,7 @@ public class PlayBill {
 
         result += "</table>\n";
         result += "<p>총액: <em>" + usd(statementData.getTotalAmount()) + "</em></p>\n";
-        result += "<p>적립 포인트: <em>" + usd(statementData.getTotalVolumeCredit()) + "</em>점</p>\n";
+        result += "<p>적립 포인트: <em>" + statementData.getTotalVolumeCredit() + "</em>점</p>\n";
         return result;
     }
 

@@ -22,11 +22,13 @@ public class CreateStatementData {
     }
 
     private static List<Performance> enrichPerformance(List<Performance> performances) {
+
         List<Performance> result = new ArrayList<>();
         for (Performance performance : performances) {
-            performance.setPlay(playFor(performance));
-            performance.setAmount(amountFor(performance));
-            performance.setVolumeCredits(volumeCreditsFor(performance));
+            PerformanceCalculator calculator = new PerformanceCalculator(performance, playFor(performance));
+            performance.setPlay(calculator.getPlay());
+            performance.setAmount(calculator.amount());
+            performance.setVolumeCredits(calculator.volumeCredits());
             result.add(performance);
         }
         return result;
@@ -36,39 +38,8 @@ public class CreateStatementData {
         return statementDate.getPerformance().stream().mapToInt((performance) -> performance.getAmount()).sum();
     }
 
-    private static int volumeCreditsFor(Performance performance) {
-        int result = 0;
-        result += Math.max(performance.getAudience() - 30, 0);
-        if ("comedy".equals(playFor(performance).getType())) {
-            result += Math.floor(performance.getAudience() / 5);
-        }
-        return result;
-    }
-
     private static int totalVolumeCredits(StatementData statementDate) {
         return statementDate.getPerformance().stream().mapToInt((performance) -> performance.getVolumeCredit()).sum();
-    }
-
-    private static int amountFor(Performance performance) {
-        int result = 0;
-        switch (playFor(performance).getType()) {
-            case "tragedy":
-                result = 40000;
-                if (performance.getAudience() > 30) {
-                    result += 1000 * (performance.getAudience() - 30);
-                }
-                break;
-            case "comedy":
-                result = 30000;
-                if (performance.getAudience() > 20) {
-                    result += 10000 + 500 * (performance.getAudience() - 20);
-                }
-                result += 300 * performance.getAudience();
-                break;
-            default:
-                throw new RuntimeException("알 수 없는 장르 : " + playFor(performance).getType());
-        }
-        return result;
     }
 
     private static Play playFor(Performance performance) {
