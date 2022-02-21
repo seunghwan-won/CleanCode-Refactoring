@@ -32,7 +32,7 @@ public class StatementData {
         this.totalAMount = totalAmount;
     }
 
-    public int getTotalAMount() {
+    public int getTotalAmount() {
         return totalAMount;
     }
 
