@@ -25,7 +25,7 @@ public class CreateStatementData {
 
         List<Performance> result = new ArrayList<>();
         for (Performance performance : performances) {
-            PerformanceCalculator calculator = new PerformanceCalculator(performance, playFor(performance));
+            PerformanceCalculator calculator = PerformanceCalculator.create(performance, playFor(performance));
             performance.setPlay(calculator.getPlay());
             performance.setAmount(calculator.amount());
             performance.setVolumeCredits(calculator.volumeCredits());
