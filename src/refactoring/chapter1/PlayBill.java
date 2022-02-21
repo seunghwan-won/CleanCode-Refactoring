@@ -1,39 +1,18 @@
 package refactoring.chapter1;
 
 import java.text.NumberFormat;
-import java.util.*;
-import java.util.stream.Stream;
+import java.util.Locale;
 
 public class PlayBill {
     private static Invoice invoice = new Invoice("BigCo");
-    private static Map<String, Play> plays = new HashMap<>() {{
-        put("hamlet", new Play("Hamlet", "tragedy"));
-        put("as-like", new Play("As You Like It", "comedy"));
-        put("othello", new Play("Othello", "tragedy"));
-    }};
+
 
     public static void main(String[] args) {
         System.out.println(statement(invoice));
     }
 
     public static String statement(Invoice invoice) {
-        StatementData statementDate = new StatementData();
-        statementDate.setCustomer(invoice.getCustomer());
-        statementDate.setPerformance(enrichPerformance(invoice.getPerformance()));
-        statementDate.setTotalAmount(totalAmount(statementDate));
-        statementDate.setTotalVolumeCredit(totalVolumeCredits(statementDate));
-        return renderPlainText(statementDate);
-    }
-
-    private static List<Performance> enrichPerformance(List<Performance> performances) {
-        List<Performance> result = new ArrayList<>();
-        for (Performance performance : performances) {
-            performance.setPlay(playFor(performance));
-            performance.setAmount(amountFor(performance));
-            performance.setVolumeCredits(volumeCreditsFor(performance));
-            result.add(performance);
-        }
-        return result;
+        return renderPlainText(CreateStatementData.create(invoice));
     }
 
     private static String renderPlainText(StatementData statementDate) {
@@ -46,49 +25,6 @@ public class PlayBill {
 
         result += "총액: " + usd(statementDate.getTotalAMount()) + "\n";
         result += "적립포인트: " + statementDate.getTotalVolumeCredit() + "점\n";
-        return result;
-    }
-
-    private static int totalAmount(StatementData statementDate) {
-        return statementDate.getPerformance().stream().mapToInt((performance) -> performance.getAmount()).sum();
-    }
-
-    private static int totalVolumeCredits(StatementData statementDate) {
-        return statementDate.getPerformance().stream().mapToInt((performance) -> performance.getVolumeCredit()).sum();
-    }
-
-    private static int volumeCreditsFor(Performance performance) {
-        int result = 0;
-        result += Math.max(performance.getAudience() - 30, 0);
-        if ("comedy".equals(playFor(performance).getType())) {
-            result += Math.floor(performance.getAudience() / 5);
-        }
-        return result;
-    }
-
-    private static Play playFor(Performance performance) {
-        return plays.get(performance.getPlayID());
-    }
-
-    private static int amountFor(Performance performance) {
-        int result = 0;
-        switch (playFor(performance).getType()) {
-            case "tragedy":
-                result = 40000;
-                if (performance.getAudience() > 30) {
-                    result += 1000 * (performance.getAudience() - 30);
-                }
-                break;
-            case "comedy":
-                result = 30000;
-                if (performance.getAudience() > 20) {
-                    result += 10000 + 500 * (performance.getAudience() - 20);
-                }
-                result += 300 * performance.getAudience();
-                break;
-            default:
-                throw new RuntimeException("알 수 없는 장르 : " + playFor(performance).getType());
-        }
         return result;
     }
 
