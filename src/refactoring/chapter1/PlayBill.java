@@ -8,7 +8,6 @@ public class PlayBill {
 
 
     public static void main(String[] args) {
-
         System.out.println(statement(invoice));
         System.out.println(htmLStatement(invoice));
     }

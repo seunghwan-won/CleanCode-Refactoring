@@ -9,8 +9,8 @@ public class TragedyCalculator extends PerformanceCalculator {
     public int amount() {
         int result = 40000;
 
-        if (super.getPerformance().getAmount() > 30) {
-            result += 1000 * (super.getPerformance().getAmount() - 30);
+        if (super.getPerformance().getAudience() > 30) {
+            result += 1000 * (super.getPerformance().getAudience() - 30);
         }
 
         return result;
